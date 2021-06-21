@@ -6,7 +6,7 @@ from app import Server
 
 
 def lb_test(lb_factory: Callable[[list[Server]], LoadBalancer]) -> None:
-    server_names = [f'server_{i}' for i in sample(range(100), 31)]
+    server_names = [f'server_{i}' for i in sample(range(100), 50)]
     initial_list = [Server(i) for i in server_names[:-1]]
     load_balancer = lb_factory(initial_list)
 
