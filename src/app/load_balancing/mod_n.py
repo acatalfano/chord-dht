@@ -1,5 +1,5 @@
 from ..server import Server
-from ..hash_function import hash
+from ..hash_function import hash_function
 from .load_balancer import LoadBalancer
 
 
@@ -10,6 +10,9 @@ class ModN(LoadBalancer):
     and will lookup the server responsible for a given key value
     '''
 
+    def __init__(self, server_list: list[Server] = None) -> None:
+        super().__init__(server_list)
+
     def _init_server_storage(self, server_list: list[Server] = None) -> None:
         self.__server_list = server_list if server_list is not None else []
 
@@ -17,4 +20,4 @@ class ModN(LoadBalancer):
         self.__server_list.append(Server(name))
 
     def responsible_server(self, key_name: str) -> Server:
-        return self.__server_list[hash(key_name) % len(self.__server_list)]
+        return self.__server_list[hash_function(key_name) % len(self.__server_list)]

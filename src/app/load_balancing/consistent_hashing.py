@@ -1,6 +1,6 @@
 from sortedcontainers import SortedDict
 from ..server import Server
-from ..hash_function import hash
+from ..hash_function import hash_function
 from .load_balancer import LoadBalancer
 
 
@@ -27,14 +27,16 @@ class ConsistentHashing(LoadBalancer):
         refuses to hash if there is no room in the address space
         '''
         if len(self.__address_space_map.keys()) < self.__map_capacity:
-            server_hash = hash(name)
+            server_hash = hash_function(name)
             while server_hash in self.__address_space_map:
-                server_hash = hash(f'{server_hash}')
+                server_hash = hash_function(f'{server_hash}')
 
             self.__address_space_map.setdefault(server_hash, Server(name))
 
     def responsible_server(self, key: str) -> Server:
-        server_hash = self.__find_responsible_server_hash(hash(key))
+        server_hash = self.__find_responsible_server_hash(
+            hash_function(key)
+        )
         server = self.__address_space_map.get(server_hash)
         if server is not None:
             return server
