@@ -2,6 +2,7 @@ from sortedcontainers import SortedDict
 from ..server import Server
 from ..hash_function import hash_function
 from .load_balancer import LoadBalancer
+from ..CONFIG import BITS_IN_ADDRESS
 
 
 class ConsistentHashing(LoadBalancer):
@@ -16,7 +17,7 @@ class ConsistentHashing(LoadBalancer):
 
     def _init_server_storage(self, server_list: list[Server] = None) -> None:
         self.__address_space_map: dict[int, Server] = SortedDict()
-        self.__map_capacity = 2 ** 8
+        self.__map_capacity = 2 ** BITS_IN_ADDRESS
         for server in server_list or []:
             self.add_server(server.name)
 

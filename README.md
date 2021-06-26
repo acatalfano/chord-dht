@@ -251,3 +251,28 @@ finger table (k-value -- name: id)
 8 -- server_97: 54
 --------------------------------
 ```
+
+### Implement Chord Routing - 10 Pts
+
+Run the following command to see the test harness result of the Chord Routing algorithm.
+It is the same ring "network" as was used in Naïve Chord Routing and the same form of output,
+but with the Chord algorithm instead of the Naïve Chord algorithm.
+
+```powershell
+> py .\src\test\chord_routing.py
+for 50 nodes, the average hop size is: 2.7958
+for 100 nodes, the average hop size is: 3.1334
+```
+
+First, most notably, the average hop size is much smaller than that of the Naïve algorithm.
+Secondly, more subtly, you can note that the hop size increased on average as the number of nodes increased.
+This result can be verified by Stoica et al. in their theoretical results on the Chord algorithm.
+
+![Chord hop size vs node count graph](./assets/chord_hop_size_and_node_count.png "title my title")
+
+Stoica et al. show a similar trend and posited that the trend is that a path length is about
+_(1/2)log<sub>2</sub>N_, where _N_ is the number of nodes.
+
+## References
+
+Stoica, I., et al. “Chord: A Scalable Peer-To-Peer Lookup Protocol for Internet Applications.” IEEE/ACM Transactions on Networking, vol. 11, no. 1, Feb. 2003, pp. 17–32, 10.1109/tnet.2002.808407.

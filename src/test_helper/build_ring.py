@@ -13,4 +13,7 @@ def build_ring(size: int) -> list[Node]:
     for current_node, next_node in zip(nodes, nodes[1:] + nodes[:1]):
         current_node.set_successor(next_node)
 
+    for n in nodes:
+        n.build_finger_table()
+
     return nodes
