@@ -5,6 +5,7 @@ from .CONFIG import ADDRESS_SPACE_SIZE
 from .utility import mod_in_range
 
 
+# TODO: probably drop AbstractNode altogether (just use Node) b/c this isn't evolving how I was expecting
 class AbstractNode(Server, ABC):
     def __init__(self, name: str, id_method: Callable[[str], int]) -> None:
         super().__init__(name)
