@@ -273,6 +273,55 @@ This result can be verified by Stoica et al. in their theoretical results on the
 Stoica et al. show a similar trend and posited that the trend is that a path length is about
 _(1/2)log<sub>2</sub>N_, where _N_ is the number of nodes.
 
+### Implement Synchronization Protocol - 10 pts
+
+Run the following command to see the test harness result of synchronization protocol.
+The synchronization protocol is driven by threads that periodically execute to update the
+successor, predecessor, and finger-table information on each node.
+
+```powershell
+> py .\src\test\synchronization.py
+press ENTER to start
+then let the activity settle down then press ENTER
+to see the effects on one node joining the network
+then press ENTER to end
+
+
+
+
+Start a ring with node 155
+set predecessor of 155 to 155
+...
+
+
+
+Node 115 join ring with successor node 153
+set predecessor of 153 to 115
+set successor of 86 to 115
+set predecessor of 115 to 86
+
+...
+```
+
+The script waits for you to press enter before beginning, then it create a ring with 11 nodes
+and wait for you to press enter again. At this point the intent is for the user to wait
+for output to stop being reported (i.e. the threads will have all finished fixing the network)
+And you can then press enter to view the activity of a single node joining the established ring.
+You can then press enter again to end the program and to get a printout of all current finger tables
+and (predecessor, node, successor) tuples.
+
+The last node will have ID 115 and will join the network on node 153.
+
+* The first step is to assign 153 to be 115's successor
+* 115 then notifies 153 that it (115) may be 153's new predecessor
+* 153 agrees and sets 115 as its own predecessor
+* 86's `stabilize` thread eventually picks up that 115 is its new successor. This is because 153 was 86's stored successor, but 86's successor's predecessor (153's predecessor, which is 115) is not 86, so 86 updates its successor to be 115.
+* Since the successor has been updated for 86, it notifies 115 that it (86) may be 115's new predecessor.
+* 115 agrees and updates its predecessor to be 86.
+* 115 is now successfully integrated into the ring.
+
+If you're interested in seeing the finger table updates as well, you can run the same script with the `-v` flag for verbose mode.
+
 ## References
 
 Stoica, I., et al. “Chord: A Scalable Peer-To-Peer Lookup Protocol for Internet Applications.” IEEE/ACM Transactions on Networking, vol. 11, no. 1, Feb. 2003, pp. 17–32, 10.1109/tnet.2002.808407.

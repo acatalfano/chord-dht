@@ -14,6 +14,8 @@ def mod_in_range(
                          + (0.5 * int(inclusive_upper))
                          ) % address_space
 
-    mod_range_size = (float_upper_bound - lower_bound) % address_space
+    nominal_case_range_size = (float_upper_bound - lower_bound) % address_space
+    full_range = upper_bound == lower_bound and target != upper_bound
+    mod_range_size = nominal_case_range_size if not full_range else address_space
     return (float_upper_bound - target) % address_space < mod_range_size and\
         (target - lower_bound) % address_space < mod_range_size
