@@ -2,7 +2,7 @@ import logging
 from time import sleep
 from random import seed, sample, choice
 from app.node import Node
-from app.hash_function import hash_function
+from app.hash_function import HashFunction
 from app.utility.logger import Logger
 import argparse
 import verboselogs
@@ -17,8 +17,10 @@ def __main__():
     seed(0)
     node_names = [f'serve_{i}' for i in sample(
         range(100), 12)]
-    ring: list[Node] = [Node.create_new_ring(node_names.pop(), hash_function)]
-    next_nodes = [Node(name, hash_function) for name in node_names[:-1]]
+    hasher = HashFunction()
+    ring: list[Node] = [Node.create_new_ring(
+        node_names.pop(), hasher.hash_function)]
+    next_nodes = [Node(name, hasher.hash_function) for name in node_names[:-1]]
     nxt = next_nodes[0]
     initial = ring[0]
 
@@ -31,7 +33,7 @@ def __main__():
         n.join_ring(ring[0])
 
     target_node = choice(ring)
-    new_node = Node(node_names[-1], hash_function)
+    new_node = Node(node_names[-1], hasher.hash_function)
 
     input('')
     print('\n\n\n\n')

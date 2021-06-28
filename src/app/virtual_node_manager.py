@@ -7,7 +7,6 @@ class VirtualNodeManager:
         self.__id_method = id_method
         self.__base_name = name
         self.__nodes: list[Node] = []
-        #[Node(name, id_method)]
 
     @staticmethod
     def create_new_ring(name: str, id_method: Callable[[str], int]) -> 'VirtualNodeManager':
@@ -25,6 +24,7 @@ class VirtualNodeManager:
         return manager
 
     def add_virtual_node(self, count: int = 1) -> None:
+        assert(len(self.nodes) >= 1)
         for _ in range(count):
             node = Node(f'{self.__base_name}_{len(self.__nodes)}',
                         self.__id_method)

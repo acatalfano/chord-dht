@@ -73,7 +73,7 @@ Random selection is used for the hashed strings.
 The test prints the assignment of 10 random keys each to 1 of 50 "server nodes".
 Then, after adding a 51st node, the new key assignment is printed out.
 
-During a sample run, `9` out of the `10` keys were assigned to a new node during the second run.
+During a sample run, `8` out of the `10` keys were assigned to a new node during the second run.
 
 ```powershell
 > py .\src\test\mod_n_load_balancing.py
@@ -107,25 +107,25 @@ keys in server server_71:
 after adding 1 new server
 --------------------------------
 
-keys in server server_92:
+keys in server server_58:
         cached_data_80
-keys in server server_77:
+keys in server server_18:
         cached_data_0
-keys in server server_73:
+keys in server server_49:
         cached_data_78
-keys in server server_90:
+keys in server server_56:
         cached_data_63
-keys in server server_25:
+keys in server server_69:
         cached_data_42
-keys in server server_75:
+keys in server server_89:
         cached_data_31
-keys in server server_98:
+keys in server server_25:
         cached_data_93
-keys in server server_33:
+keys in server server_65:
         cached_data_41
-keys in server server_38:
+keys in server server_61:
         cached_data_90
-keys in server server_60:
+keys in server server_71:
         cached_data_8
 ```
 
@@ -134,7 +134,7 @@ keys in server server_60:
 This is the same manual test as mod-n load balancing except that consistent hashing is used
 as the key-assignment algorithm instead of mod-n.
 
-When the 51st server was added, 0 keys had to be reassigned to a new server.
+When the 51st server was added, `3` keys had to be reassigned to a new server.
 
 ```powershell
 > py .\src\test\consistent_hashing_load_balancing.py
@@ -146,10 +146,11 @@ initial configuration
 keys in server server_71:
         cached_data_80
         cached_data_93
-keys in server server_38:
+keys in server server_74:
         cached_data_0
-keys in server server_18:
+keys in server server_36:
         cached_data_78
+        cached_data_90
 keys in server server_27:
         cached_data_63
 keys in server server_92:
@@ -158,8 +159,6 @@ keys in server server_89:
         cached_data_31
 keys in server server_25:
         cached_data_41
-keys in server server_36:
-        cached_data_90
 keys in server server_68:
         cached_data_8
 
@@ -170,21 +169,19 @@ after adding 1 new server
 keys in server server_71:
         cached_data_80
         cached_data_93
-keys in server server_38:
+keys in server server_40:
         cached_data_0
-keys in server server_18:
+keys in server server_36:
         cached_data_78
+        cached_data_42
+        cached_data_90
 keys in server server_27:
         cached_data_63
-keys in server server_92:
-        cached_data_42
 keys in server server_89:
         cached_data_31
 keys in server server_25:
         cached_data_41
-keys in server server_36:
-        cached_data_90
-keys in server server_68:
+keys in server server_12:
         cached_data_8
 ```
 
@@ -260,8 +257,8 @@ but with the Chord algorithm instead of the Naïve Chord algorithm.
 
 ```powershell
 > py .\src\test\chord_routing.py
-for 50 nodes, the average hop size is: 2.7958
-for 100 nodes, the average hop size is: 3.1334
+for 50 nodes, the average hop size is: 2.7608
+for 100 nodes, the average hop size is: 3.1345
 ```
 
 First, most notably, the average hop size is much smaller than that of the Naïve algorithm.
@@ -291,7 +288,7 @@ then press ENTER to end
 
 Start a ring with node 155
 set predecessor of 155 to 155
-...
+... [logging omitted]
 
 
 
@@ -300,7 +297,7 @@ set predecessor of 153 to 115
 set successor of 86 to 115
 set predecessor of 115 to 86
 
-...
+... [logging omitted]
 ```
 
 The script waits for you to press enter before beginning, then it create a ring with 11 nodes
@@ -321,6 +318,18 @@ The last node will have ID 115 and will join the network on node 153.
 * 115 is now successfully integrated into the ring.
 
 If you're interested in seeing the finger table updates as well, you can run the same script with the `-v` flag for verbose mode.
+
+### Improve Load Balancing with Virtual Nodes - 10 pts
+
+<!-- TODO: write stuff -->
+
+```powershell
+> py .\src\test\virtual_nodes.py
+standard deviation for physical 20-ring: 12.436237373096414
+standard deviation for virtual 200-ring: 0.7947326594522217
+```
+
+<!-- TODO: need to document which files relate to which task -->
 
 ## References
 

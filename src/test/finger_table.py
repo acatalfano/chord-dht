@@ -12,6 +12,7 @@ def __main__():
 
     seed(0)
     target_node = choice(nodes)
+    target_node.build_finger_table()
 
     print('--------------------------------')
     print(f'node (name: id)\n    {target_node.name}: {target_node.id}\n')
