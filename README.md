@@ -234,18 +234,18 @@ server_49: 171
 server_61: 172
 server_38: 221
 --------------------------------
-node (name: id)
+node (id)
     server_65: 170
 
-finger table (k-value -- name: id)
-1 -- server_49: 171
-2 -- server_61: 172
-3 -- server_38: 221
-4 -- server_38: 221
-5 -- server_38: 221
-6 -- server_38: 221
-7 -- server_62: 16
-8 -- server_97: 54
+finger table (k-value -- id)
+1 -- 171
+2 -- 172
+3 -- 221
+4 -- 221
+5 -- 221
+6 -- 221
+7 -- 16
+8 -- 54
 --------------------------------
 ```
 
@@ -321,7 +321,13 @@ If you're interested in seeing the finger table updates as well, you can run the
 
 ### Improve Load Balancing with Virtual Nodes - 10 pts
 
-<!-- TODO: write stuff -->
+The test harness creates a 20-node physical network and a 200-node virtual network (with 20 physical nodes).
+The standard deviation of the nodes' responsible load is measured for both networks.
+Assuming more or less comparable hardware comprising the nodes, a lower standard deviation is the goal.
+By adding the virtual nodes into the mix, the standard deviation of the load distribution jumped from
+`12.4` down to `0.8`.
+
+Run the following command to execute the test harness locally.
 
 ```powershell
 > py .\src\test\virtual_nodes.py
@@ -329,7 +335,153 @@ standard deviation for physical 20-ring: 12.436237373096414
 standard deviation for virtual 200-ring: 0.7947326594522217
 ```
 
-<!-- TODO: need to document which files relate to which task -->
+Virtual nodes address load balancing issues related to non-uniform distribution of nodes across the ring.
+The load balancing issue they don't address is the case where a handful of specific keys garner
+unproportionately high volumes of traffic. To address this load-balancing problem, you would need
+to implement an ensemble of servers that are load balanced, together functioning as a single node in
+the ring (a node responsible for the keys that receive the high amount of traffic).
+
+### Run Chord on Mininet - 10 pts
+
+To run Chord on Mininet, you will first need to setup the Mininet VM (or local installation), Python 3.9,
+the proper version of Pip to go with Python 3.9, and (recommended) a venv.
+
+#### Setup/Installation
+
+##### Mininet Setup
+
+You will need to first have a system compatible with running mininet, follow Mininet's [instructions](http://mininet.org/download/) to do so.
+
+Either setup the VM image outlined in option 1 or follow these steps taken from options 2:
+
+Clone the mininet repository and checkout the 2.3.0 branch. There are other more
+recent releases of mininet (e.g. `2.3.0d6`), but they had some quirks with packages
+not lining up. `2.3.0` is the happy path. You need to install like this because the
+latency tests depend on controllers as well as the actual mininet library.
+
+```bash
+$ git clone git://github.com/mininet/mininet
+$ cd mininet
+$ git checkout -b mininet-2.3.0 2.3.0
+$ cd ..
+```
+
+Now run the installation script:
+
+```bash
+$ mininet/util/install.sh -nfv
+```
+
+##### Install Python 3.9
+
+Before beginning, update and ensure `software-properties-common` is installed:
+
+```bash
+$ sudo apt update
+$ sudo apt install software-properties-common
+```
+
+Now add the PPA:
+
+```bash
+$ sudo add-apt-repository ppa:deadsnakes/ppa
+```
+
+Install Python3.9:
+
+```bash
+$ sudo apt install python3.9
+```
+
+Alternatively, you may want to install `python3.9-full`, which you can always do later if necessary.
+
+You can now run Python 3.9 with the command `python3.9`. For sanity, check the version with `python3.9 --version`.
+
+##### Install Pip for Python 3.9
+
+Retrieve and run the `get-pip.py` script:
+
+```bash
+$ curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py
+$ sudo python3.9 ./get-pip.py
+```
+
+Cleanup the script if you want; it served its purpose.
+
+```bash
+$ rm ./get-pip.py
+```
+
+##### Setup a Virtual Environment
+
+Your python installation probably includes `venv`, but if not you'll have to get a Python 3.9 distribution that does.
+If you have the option at installation, this means selecting the "full" version.
+
+Open up a terminal in the root directory of this repository and run the following command.
+
+```bash
+$ python3.9 -m venv --upgrade-deps ./env
+```
+
+Activate the venv
+
+```bash
+$ source ./env/bin/activate
+```
+
+If you close the terminal, you'll have to activate the venv again.
+
+##### Install the project dependencies
+
+This will install all of the dependencies except for mininet,
+that will be built from source.
+Run the following command (all systems)
+
+```bash
+$ pip install -e ./src
+```
+
+You will now have to copy over the mininet package that was setup for you.
+Locate it, likely in `~/.local/lib/python3.9/site-packages`. The `mininet` directory is what you want to copy.
+Copy it over to `/PATH/TO/REPOSITORY/env/lib/python3.9/site-packages`
+
+#### Run the Test Harness
+
+Be sure the venv is activated if you're using the recommended venv setup.
+If you named your venv `env`, then you should see `(env)` before the current working directory in your command prompt.
+
+From the root of this repository, you can run the test harness with the following command (within the mininet VM if you don't have it installed locally):
+
+For venv users who followed the installation instructions:
+
+```bash
+(env) User@Machine:~/Repo$ sudo ./env/bin/python ./src/test/mininet/topology.py
+```
+
+For venv users who chose the venv to be located somewhere else:
+
+```bash
+(CUSTOM-VENV-NAME) User@Machine:~/Repo$ sudo PATH/TO/YOUR/VENV/bin/python ./src/test/mininet/topology.py
+```
+
+If you installed the dependencies globally as super-user (not using a venv):
+
+```bash
+User@Machine:~/Repo$ sudo python3.9 ./src/test/mininet/topology.py
+```
+
+(your python command may differ from `python3.9`, but ensure that you are running python version 3.9)
+
+If you installed as a normal non-elevated user, it will not run. Mininet requires super-user privileges
+and the dependencies must be installed somewhere the super-user knows about.
+
+#### Results
+
+Each node in the network will output results to `*.txt` files located under `./src/test/mininet/nodes`
+
+Originally additional activity-logging was intended, but
+currently the extent of the functionality is error logging.
+No errors are currently being output.
 
 ## References
 

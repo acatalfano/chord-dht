@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from ..server import Server
+from ..node.server import Server
 
 
 class LoadBalancer(ABC):

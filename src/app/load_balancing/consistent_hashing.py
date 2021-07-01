@@ -1,5 +1,5 @@
 from sortedcontainers import SortedDict
-from ..server import Server
+from ..node.server import Server
 from ..hash_function import HashFunction
 from .load_balancer import LoadBalancer
 from ..CONFIG import ADDRESS_SPACE_SIZE
@@ -33,8 +33,6 @@ class ConsistentHashing(LoadBalancer):
         '''
         if len(self.__address_space_map.keys()) < self.__map_capacity:
             server_hash = self.__hasher.hash_function(name)
-            # while server_hash in self.__address_space_map:
-            #     server_hash = hash_function(f'{server_hash}')
 
             self.__address_space_map.setdefault(server_hash, Server(name))
 

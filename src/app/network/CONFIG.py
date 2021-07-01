@@ -1,0 +1,8 @@
+KEY_SERVER_PORT = '5550'
+
+HOP_DESTINATION_PORT = '5550'
+SUCCESSOR_PREDECESSOR_PORT = '5551'
+NOTIFY_PORT = '5552'
+
+# The network-timeout tolerance in milliseconds
+TIMEOUT = 5000

@@ -1,2 +1,5 @@
 sortedcontainers==2.4.0
 verboselogs==1.7
+click==8.0.1
+mininet==2.3.0.dev6
+pyzmq==22.1.0

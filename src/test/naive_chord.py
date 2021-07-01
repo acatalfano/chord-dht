@@ -1,8 +1,12 @@
+from typing import Callable
 from test_helper.hop_test import hop_test
+from app.node.naive_node import NaiveNode
 
 
 def __main__() -> None:
-    hop_test(lambda node, digest: node.find_successor(digest))
+    build_finger_table: Callable[[NaiveNode], None] =\
+        lambda node: node.build_finger_table()
+    hop_test(NaiveNode, build_finger_table)
 
 
 if __name__ == '__main__':

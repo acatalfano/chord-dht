@@ -1,4 +1,4 @@
-from ..server import Server
+from ..node.server import Server
 from ..hash_function import HashFunction
 from .load_balancer import LoadBalancer
 

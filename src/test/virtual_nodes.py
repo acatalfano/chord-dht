@@ -1,6 +1,6 @@
 from math import sqrt
 from app.virtual_node_manager import VirtualNodeManager
-from app.node import Node
+from app.node.local_stabilizing_node import LocalStabilizingNode
 from app.CONFIG import ADDRESS_SPACE_SIZE
 from app.hash_function import HashFunction
 from random import seed, sample
@@ -15,8 +15,9 @@ def __main__() -> None:
 
 def __test_physical_ring(node_names: list[str]) -> None:
     hasher = HashFunction()
-    first_node = Node.create_new_ring(node_names[0], hasher.hash_function)
-    other_nodes = [Node(f'node_{i}', hasher.hash_function)
+    first_node = LocalStabilizingNode.create_new_ring(
+        node_names[0], hasher.hash_function)
+    other_nodes = [LocalStabilizingNode(f'node_{i}', hasher.hash_function)
                    for i in node_names[1:]]
     for n in other_nodes:
         n.join_ring(first_node)
@@ -46,7 +47,7 @@ def __test_virtual_ring(node_names: list[str]) -> None:
         f'standard deviation for virtual 200-ring: {__standard_deviation(responsible_ranges)}')
 
 
-def __responsible_ranges(ring: list[Node]) -> list[int]:
+def __responsible_ranges(ring: list[LocalStabilizingNode]) -> list[int]:
     ring.sort(key=lambda x: x.id)
     node_successor_pairs = list(zip(ring, ring[1:] + ring[:1]))
     return [(successor.id - node.id) % ADDRESS_SPACE_SIZE
